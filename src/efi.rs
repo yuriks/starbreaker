@@ -1,7 +1,7 @@
-pub type EFI_STATUS = uint;
-pub type EFI_HANDLE = *();
+pub type STATUS = uint;
+pub type HANDLE = *();
 
-pub struct EFI_TABLE_HEADER {
+pub struct TABLE_HEADER {
 	Signature: u64,
 	Revision: u32,
 	HeaderSize: u32,
@@ -18,44 +18,44 @@ pub struct SIMPLE_TEXT_OUTPUT_MODE {
 	CursorVisible: bool,
 }
 
-pub type EFI_TEXT_RESET = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ExtendedVerification: bool) -> EFI_STATUS;
-pub type EFI_TEXT_STRING = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> EFI_STATUS;
-pub type EFI_TEXT_TEST_STRING = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> EFI_STATUS;
-pub type EFI_TEXT_QUERY_MODE = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint, Columns: *uint, Rows: *uint) -> EFI_STATUS;
-pub type EFI_TEXT_SET_MODE = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint) -> EFI_STATUS;
-pub type EFI_TEXT_SET_ATTRIBUTE = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Attribute: uint) -> EFI_STATUS;
-pub type EFI_TEXT_CLEAR_SCREEN = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL) -> EFI_STATUS;
-pub type EFI_TEXT_SET_CURSOR_POSITION = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Column: uint, Row: uint) -> EFI_STATUS;
-pub type EFI_TEXT_ENABLE_CURSOR = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Visible: bool) -> EFI_STATUS;
+pub type TEXT_RESET = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, ExtendedVerification: bool) -> STATUS;
+pub type TEXT_STRING = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> STATUS;
+pub type TEXT_TEST_STRING = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> STATUS;
+pub type TEXT_QUERY_MODE = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint, Columns: *uint, Rows: *uint) -> STATUS;
+pub type TEXT_SET_MODE = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint) -> STATUS;
+pub type TEXT_SET_ATTRIBUTE = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, Attribute: uint) -> STATUS;
+pub type TEXT_CLEAR_SCREEN = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL) -> STATUS;
+pub type TEXT_SET_CURSOR_POSITION = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, Column: uint, Row: uint) -> STATUS;
+pub type TEXT_ENABLE_CURSOR = extern "win64" fn(This: *SIMPLE_TEXT_OUTPUT_PROTOCOL, Visible: bool) -> STATUS;
 
-pub struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
-	Reset: EFI_TEXT_RESET,
-	OutputString: EFI_TEXT_STRING,
-	TestString: EFI_TEXT_TEST_STRING,
-	QueryMode: EFI_TEXT_QUERY_MODE,
-	SetMode: EFI_TEXT_SET_MODE,
-	SetAttribute: EFI_TEXT_SET_ATTRIBUTE,
-	ClearScreen: EFI_TEXT_CLEAR_SCREEN,
-	SetCursorPosition: EFI_TEXT_SET_CURSOR_POSITION,
-	EnableCursor: EFI_TEXT_ENABLE_CURSOR,
+pub struct SIMPLE_TEXT_OUTPUT_PROTOCOL {
+	Reset: TEXT_RESET,
+	OutputString: TEXT_STRING,
+	TestString: TEXT_TEST_STRING,
+	QueryMode: TEXT_QUERY_MODE,
+	SetMode: TEXT_SET_MODE,
+	SetAttribute: TEXT_SET_ATTRIBUTE,
+	ClearScreen: TEXT_CLEAR_SCREEN,
+	SetCursorPosition: TEXT_SET_CURSOR_POSITION,
+	EnableCursor: TEXT_ENABLE_CURSOR,
 	Mode: *SIMPLE_TEXT_OUTPUT_MODE,
 }
 
-pub struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL;
-pub struct EFI_RUNTIME_SERVICES;
-pub struct EFI_CONFIGURATION_TABLE;
+pub struct SIMPLE_TEXT_INPUT_PROTOCOL;
+pub struct RUNTIME_SERVICES;
+pub struct CONFIGURATION_TABLE;
 
-pub struct EFI_SYSTEM_TABLE {
-	Hdr: EFI_TABLE_HEADER,
+pub struct SYSTEM_TABLE {
+	Hdr: TABLE_HEADER,
 	FirmwareVendor: *u16,
 	FirmwareRevision: u32,
-	ConsoleInHandle: EFI_HANDLE,
-	ConIn: *EFI_SIMPLE_TEXT_INPUT_PROTOCOL,
-	ConsoleOutHandle: EFI_HANDLE,
-	ConOut: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL,
-	StandardErrorHandle: EFI_HANDLE,
-	StdErr: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL,
-	RuntimeServices: *EFI_RUNTIME_SERVICES,
+	ConsoleInHandle: HANDLE,
+	ConIn: *SIMPLE_TEXT_INPUT_PROTOCOL,
+	ConsoleOutHandle: HANDLE,
+	ConOut: *SIMPLE_TEXT_OUTPUT_PROTOCOL,
+	StandardErrorHandle: HANDLE,
+	StdErr: *SIMPLE_TEXT_OUTPUT_PROTOCOL,
+	RuntimeServices: *RUNTIME_SERVICES,
 	NumberOfTableEntries: uint,
-	ConfigurationTable: *EFI_CONFIGURATION_TABLE,
+	ConfigurationTable: *CONFIGURATION_TABLE,
 }
