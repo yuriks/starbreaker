@@ -3,26 +3,24 @@
 extern mod syntax;
 
 use syntax::ast::{
+	LitUint,
 	Name,
 	TokenTree,
-	LitUint,
 	TyU16,
-
 };
-use syntax::codemap;
 use syntax::codemap::Span;
 use syntax::ext::base::{
-	get_single_str_from_tts,
-	SyntaxExtension,
+	ExtCtxt,
+	MRExpr,
+	MacResult,
+	NormalTT,
 	SyntaxExpanderTT,
 	SyntaxExpanderTTExpanderWithoutContext,
-	NormalTT,
-	ExtCtxt,
-	MacResult,
-	MRExpr,
+	SyntaxExtension,
+	get_single_str_from_tts,
 };
-use syntax::parse::token;
 use syntax::ext::build::AstBuilder;
+use syntax::parse::token;
 
 #[macro_registrar]
 pub fn macro_registrar(register: |Name, SyntaxExtension|) {
@@ -39,7 +37,7 @@ pub fn expand_ucs2_from_str(cx: &mut ExtCtxt, sp: Span, tts: &[TokenTree]) -> Ma
 
 	let characters = string.to_utf16() + ~[0u16];
 	let mut char_vec = characters.iter().map(|&codepoint| {
-		cx.expr_lit(codemap::DUMMY_SP, LitUint(codepoint as u64, TyU16))
+		cx.expr_lit(sp, LitUint(codepoint as u64, TyU16))
 	});
 
 	MRExpr(cx.expr_vec(sp, char_vec.to_owned_vec()))
