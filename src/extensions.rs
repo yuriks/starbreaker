@@ -2,22 +2,17 @@
 
 extern mod syntax;
 
-use syntax::ast;
 use syntax::ast::{
-	ExprLit,
-	ExprVec,
-	LitStr,
 	Name,
 	TokenTree,
-	MutImmutable,
-	Expr,
 	LitUint,
 	TyU16,
 
 };
 use syntax::codemap;
-use syntax::codemap::{Span, dummy_spanned};
+use syntax::codemap::Span;
 use syntax::ext::base::{
+	get_single_str_from_tts,
 	SyntaxExtension,
 	SyntaxExpanderTT,
 	SyntaxExpanderTTExpanderWithoutContext,
@@ -27,7 +22,7 @@ use syntax::ext::base::{
 	MRExpr,
 };
 use syntax::parse::token;
-use syntax::parse;
+use syntax::ext::build::AstBuilder;
 
 #[macro_registrar]
 pub fn macro_registrar(register: |Name, SyntaxExtension|) {
@@ -40,36 +35,12 @@ pub fn macro_registrar(register: |Name, SyntaxExtension|) {
 }
 
 pub fn expand_ucs2_from_str(cx: &mut ExtCtxt, sp: Span, tts: &[TokenTree]) -> MacResult {
-	let mut parser = parse::new_parser_from_tts(cx.parse_sess(), cx.cfg(), tts.to_owned());
-
-	let expr = parser.parse_expr();
-
-	let string = match expr.node {
-		ExprLit(lit) => {
-			match lit.node {
-				LitStr(s, _) => s,
-				_ => cx.span_fatal(expr.span, "expected string literal"),
-			}
-		}
-		_ => cx.span_fatal(expr.span, "expected string literal"),
-	};
-
-	if parser.token != token::EOF {
-		cx.span_fatal(parser.span, "unexpected garbage");
-	}
+	let string = get_single_str_from_tts(cx, sp, tts, "expand_ucs2_from_str");
 
 	let characters = string.to_utf16() + ~[0u16];
 	let mut char_vec = characters.iter().map(|&codepoint| {
-		 @Expr {
-			 id: ast::DUMMY_NODE_ID,
-			 node: ExprLit(@dummy_spanned(LitUint(codepoint as u64, TyU16))),
-			 span: codemap::DUMMY_SP,
-		 }
+		cx.expr_lit(codemap::DUMMY_SP, LitUint(codepoint as u64, TyU16))
 	});
 
-	MRExpr(@Expr {
-		id: ast::DUMMY_NODE_ID,
-		node: ExprVec(char_vec.to_owned_vec(), MutImmutable),
-		span: sp,
-	})
+	MRExpr(cx.expr_vec(sp, char_vec.to_owned_vec()))
 }
