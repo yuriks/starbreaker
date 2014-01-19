@@ -24,16 +24,26 @@ struct SIMPLE_TEXT_OUTPUT_MODE {
 	CursorVisible: bool,
 }
 
+type EFI_TEXT_RESET = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ExtendedVerification: bool) -> EFI_STATUS;
+type EFI_TEXT_STRING = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> EFI_STATUS;
+type EFI_TEXT_TEST_STRING = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> EFI_STATUS;
+type EFI_TEXT_QUERY_MODE = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint, Columns: *uint, Rows: *uint) -> EFI_STATUS;
+type EFI_TEXT_SET_MODE = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint) -> EFI_STATUS;
+type EFI_TEXT_SET_ATTRIBUTE = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Attribute: uint) -> EFI_STATUS;
+type EFI_TEXT_CLEAR_SCREEN = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL) -> EFI_STATUS;
+type EFI_TEXT_SET_CURSOR_POSITION = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Column: uint, Row: uint) -> EFI_STATUS;
+type EFI_TEXT_ENABLE_CURSOR = extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Visible: bool) -> EFI_STATUS;
+
 struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
-	Reset: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ExtendedVerification: bool) -> EFI_STATUS,
-	OutputString: extern "win64" fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> EFI_STATUS,
-	TestString: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, String: *u16) -> EFI_STATUS,
-	QueryMode: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint, Columns: *uint, Rows: *uint) -> EFI_STATUS,
-	SetMode: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, ModeNumber: uint) -> EFI_STATUS,
-	SetAttribute: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Attribute: uint) -> EFI_STATUS,
-	ClearScreen: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL) -> EFI_STATUS,
-	SetCursorPosition: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Column: uint, Row: uint) -> EFI_STATUS,
-	EnableCursor: fn(This: *EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL, Visible: bool) -> EFI_STATUS,
+	Reset: EFI_TEXT_RESET,
+	OutputString: EFI_TEXT_STRING,
+	TestString: EFI_TEXT_TEST_STRING,
+	QueryMode: EFI_TEXT_QUERY_MODE,
+	SetMode: EFI_TEXT_SET_MODE,
+	SetAttribute: EFI_TEXT_SET_ATTRIBUTE,
+	ClearScreen: EFI_TEXT_CLEAR_SCREEN,
+	SetCursorPosition: EFI_TEXT_SET_CURSOR_POSITION,
+	EnableCursor: EFI_TEXT_ENABLE_CURSOR,
 	Mode: *SIMPLE_TEXT_OUTPUT_MODE,
 }
 
