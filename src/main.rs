@@ -1,9 +1,6 @@
 #[no_std];
-#[feature(phase)];
 
 extern mod core;
-#[phase(syntax)]
-extern mod extensions;
 mod efi;
 
 fn str_len<'a>(s: &'a str) -> uint {
