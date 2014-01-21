@@ -11,14 +11,17 @@ starbreaker.iso : starbreaker.efi
 	cp starbreaker.efi obj/img_tmp/efi/boot/bootx64.efi
 	mkisofs -o $@ obj/img_tmp
 
-starbreaker.efi : obj/main.o obj/$(LIBCORE)
-	$(LD) --oformat pei-x86-64 --subsystem 10 -pie -e efi_main $? -o $@
+starbreaker.efi : obj/main.o obj/support.o obj/$(LIBCORE)
+	$(LD) --oformat pei-x86-64 --subsystem 10 -pie -e efi_main $^ -o $@
 
 obj/%.o : obj/%.bc
 	clang -c -O2 -o $@ $<
 
 obj/$(LIBEXTENSIONS) : src/extensions.rs
 	rustc --lib $< --out-dir $(dir $@)
+
+obj/support.bc : externals/rust-core/support.rs
+	rustc --lib --emit-llvm --passes inline $< --out-dir $(dir $@)
 
 obj/main.bc : src/main.rs src/efi.rs obj/$(LIBCORE) obj/$(LIBEXTENSIONS)
 	rustc --emit-llvm -O --staticlib --out-dir $(dir $@) -L obj/ -Z lto -Z no-landing-pads $<
