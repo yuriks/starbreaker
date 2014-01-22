@@ -33,7 +33,13 @@ pub fn macro_registrar(register: |Name, SyntaxExtension|) {
 }
 
 pub fn expand_ucs2_from_str(cx: &mut ExtCtxt, sp: Span, tts: &[TokenTree]) -> MacResult {
-	let string = get_single_str_from_tts(cx, sp, tts, "expand_ucs2_from_str");
+	let string = match get_single_str_from_tts(cx, sp, tts, "expand_ucs2_from_str") {
+		Some(x) => x,
+		None => {
+			cx.span_err(sp, "Expected string literal.");
+			return MacResult::dummy_expr();
+		}
+	};
 
 	let characters = string.to_utf16() + ~[0u16];
 	let mut char_vec = characters.iter().map(|&codepoint| {
