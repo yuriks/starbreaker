@@ -3,7 +3,15 @@ LD := x86_64-w64-mingw32-ld
 LIBCORE := libcore-2e829c2f-0.0.rlib
 LIBEXTENSIONS := libextensions-d5bbce2f-0.0.so
 
-.PHONY : clean
+.PHONY : all clean
+
+all : starbreaker.iso
+
+install : starbreaker.iso
+ifndef DESTDIR
+	$(error Set DESTDIR to use install.)
+endif
+	cp $^ $(DESTDIR)
 
 starbreaker.iso : starbreaker.efi
 	rm -rf obj/img_tmp
