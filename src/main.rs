@@ -22,10 +22,10 @@ fn print(s: &str) {
 	let mut src_i = 0;
 	let mut dst_i = 0;
 	while dst_i < buf_len - 1 && src_i < str_len(s) {
-		if (s[src_i] & 0x80 == 0) { // ASCII character
+		if s[src_i] & 0x80 == 0 { // ASCII character
 			buffer[dst_i] =	s[src_i] as u16;
 		} else { // Non-ASCII character
-			if (s[src_i] & 0x40 != 0) { // Leading byte
+			if s[src_i] & 0x40 != 0 { // Leading byte
 				buffer[dst_i] = '?' as u16;
 			} else { // Continuation, don't output anything
 				src_i += 1;
@@ -44,7 +44,7 @@ fn print(s: &str) {
 
 #[no_mangle]
 #[no_split_stack]
-pub extern "win64" fn efi_main(image_handle: efi::HANDLE, system_table_: *efi::SYSTEM_TABLE) -> efi::STATUS {
+pub extern "win64" fn efi_main(_: efi::HANDLE, system_table_: *efi::SYSTEM_TABLE) -> efi::STATUS {
 	unsafe {
 		system_table = system_table_;
 		print("Hello ß World!\r\n");
