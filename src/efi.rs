@@ -20,7 +20,7 @@ pub enum STATUS {
 	UNSUPPORTED = error_bit | 3u,
 	BAD_BUFFER_SIZE = error_bit | 4u,
 	BUFFER_TOO_SMALL = error_bit | 5u,
-	NOT_READY= error_bit | 6u,
+	NOT_READY = error_bit | 6u,
 	DEVICE_ERROR = error_bit | 7u,
 	WRITE_PROTECTED = error_bit | 8u,
 	OUT_OF_RESOURCES = error_bit | 9u,
