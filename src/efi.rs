@@ -99,8 +99,9 @@ pub enum ALLOCATE_TYPE {
 	AllocateAddress,
 }
 
+#[repr(u32)]
 pub enum MEMORY_TYPE {
-	ReservedMemoryType,
+	ReservedMemoryType = 0u32,
 	LoaderCode,
 	LoaderData,
 	BootServicesCode,
@@ -117,7 +118,7 @@ pub enum MEMORY_TYPE {
 }
 
 pub struct MEMORY_DESCRIPTOR {
-	Type: u32,
+	Type: MEMORY_TYPE,
 	PhysicalStart: PHYSICAL_ADDRESS,
 	VirtualStart: VIRTUAL_ADDRESS,
 	NumberOfPages: u64,
@@ -140,8 +141,8 @@ pub type RESTORE_TPL = extern "win64" fn(OldTpl: TPL);
 pub type ALLOCATE_PAGES = extern "win64" fn(Type: ALLOCATE_TYPE, MemoryType: MEMORY_TYPE, Pages: uint, Memory: *mut PHYSICAL_ADDRESS) -> STATUS;
 pub type FREE_PAGES = extern "win64" fn(Memory: PHYSICAL_ADDRESS, Pages: uint) -> STATUS;
 pub type GET_MEMORY_MAP = extern "win64" fn(MemoryMapSize: *mut uint, MemoryMap: *mut MEMORY_DESCRIPTOR, MapKey: *mut uint, DescriptorSize: *mut uint, DescriptorVersion: *mut u32) -> STATUS;
-pub type ALLOCATE_POOL = extern "win64" fn(PoolType: MEMORY_TYPE, Size: uint, Buffer: *mut *()) -> STATUS;
-pub type FREE_POOL = extern "win64" fn(Buffer: *()) -> STATUS;
+pub type ALLOCATE_POOL = extern "win64" fn(PoolType: MEMORY_TYPE, Size: uint, Buffer: *mut *mut ()) -> STATUS;
+pub type FREE_POOL = extern "win64" fn(Buffer: *mut ()) -> STATUS;
 pub type CREATE_EVENT = extern "win64" fn(Type: uint, NotifyTpl: TPL, NotifyFunction: EVENT_NOTIFY, NotifyContext: *(), Event: *mut EVENT) -> STATUS;
 pub type SET_TIMER = extern "win64" fn(Event: EVENT, Type: TIMER_DELAY, TriggerTime: u64) -> STATUS;
 pub type WAIT_FOR_EVENT = extern "win64" fn(NumberOfEvents: uint, Event: *EVENT, Index: *mut uint) -> STATUS;
